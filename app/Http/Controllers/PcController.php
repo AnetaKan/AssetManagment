@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PC;
 
 class PcController extends Controller
 {
@@ -11,15 +12,8 @@ class PcController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $pcs = PC::all();
+        return response()->json($pcs);
     }
 
     /**
@@ -27,38 +21,47 @@ class PcController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $pc = PC::create($data);
+        return response()->json($pc, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $pc = PC::find($id);
+        if (!$pc) {
+            return response()->json(['message' => 'PC not found'], 404);
+        }
+        return response()->json($pc);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $pc = PC::find($id);
+        if (!$pc) {
+            return response()->json(['message' => 'PC not found'], 404);
+        }
+        $data = $request->all();
+        $pc->update($data);
+        return response()->json($pc);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $pc = PC::find($id);
+        if (!$pc) {
+            return response()->json(['message' => 'PC not found'], 404);
+        }
+        $pc->delete();
+        return response()->json(['message' => 'PC deleted']);
     }
 }

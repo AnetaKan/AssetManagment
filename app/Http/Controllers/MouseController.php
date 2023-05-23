@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Mouse;
 
 class MouseController extends Controller
 {
@@ -11,15 +12,8 @@ class MouseController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $mouses = Mouse::all();
+        return response()->json($mouses);
     }
 
     /**
@@ -27,38 +21,47 @@ class MouseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $mouse = Mouse::create($data);
+        return response()->json($mouse, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $mouse = Mouse::find($id);
+        if (!$mouse) {
+            return response()->json(['message' => 'Mouse not found'], 404);
+        }
+        return response()->json($mouse);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $mouse = Mouse::find($id);
+        if (!$mouse) {
+            return response()->json(['message' => 'Mouse not found'], 404);
+        }
+        $data = $request->all();
+        $mouse->update($data);
+        return response()->json($mouse);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $mouse = Mouse::find($id);
+        if (!$mouse) {
+            return response()->json(['message' => 'Mouse not found'], 404);
+        }
+        $mouse->delete();
+        return response()->json(['message' => 'Mouse deleted']);
     }
 }

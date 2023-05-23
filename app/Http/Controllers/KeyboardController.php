@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Keyboard;
 
 class KeyboardController extends Controller
 {
@@ -11,15 +12,8 @@ class KeyboardController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $keyboards = Keyboard::all();
+        return response()->json($keyboards);
     }
 
     /**
@@ -27,38 +21,48 @@ class KeyboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $keyboard = Keyboard::create($data);
+        return response()->json($keyboard, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $keyboard = Keyboard::find($id);
+        if (!$keyboard) {
+            return response()->json(['message' => 'Keyboard not found'], 404);
+        }
+        return response()->json($keyboard);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $keyboard = Keyboard::find($id);
+        if (!$keyboard) {
+            return response()->json(['message' => 'Keyboard not found'], 404);
+        }
+        $data = $request->all();
+        $keyboard->update($data);
+        return response()->json($keyboard);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        $keyboard = Keyboard::find($id);
+        if (!$keyboard) {
+            return response()->json(['message' => 'Keyboard not found'], 404);
+        }
+        $keyboard->delete();
+        return response()->json(['message' => 'Keyboard deleted']);
     }
 }
+
