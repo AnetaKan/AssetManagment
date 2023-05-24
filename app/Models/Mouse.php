@@ -17,7 +17,7 @@ class Mouse extends Model
     ];
 
     protected $casts = [
-        'mmouse_id' => 'int',
+        'mouse_id' => 'int',
         'name' => 'string'
     ];
     public function equipment(): BelongsTo
